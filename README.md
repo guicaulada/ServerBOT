@@ -1,2 +1,2 @@
-# SteamBOT
-A Discord bot that interacts with Steam and SteamCMD
+# ServerBOT
+A Discord bot that starts, stops and show the status of any configured service
