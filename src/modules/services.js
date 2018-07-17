@@ -18,6 +18,6 @@ __ServerBOT.updateServices = () => {
 
 let servicePoller = () => {
   __ServerBOT.updateServices();
-  setTimeout(servicePoller, 10000);
+  setTimeout(servicePoller, __ServerBOT.config.updateInterval);
 };
 servicePoller();
