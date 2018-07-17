@@ -17,3 +17,5 @@ serviceCommand.registerSubcommand('list', (msg, args) => {
   fullDescription: 'The bot will list the registered services followed by their ID.',
   usage: '',
 });
+
+__ServerBOT.registerCommandAlias('server', 'service'); // Alias !server to !service
