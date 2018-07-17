@@ -65,3 +65,6 @@ typings/
 
 # vs config
 .vs
+
+#env file
+env
