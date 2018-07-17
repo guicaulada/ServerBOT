@@ -23,7 +23,7 @@ const services = [
   {
     id: '7d2d',
     name: '7 Days 2 Die',
-    address: 'localhost:26900',
+    address: 'localhost:26910',
     start: '',
     stop: '',
   },
