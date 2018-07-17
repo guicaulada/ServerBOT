@@ -37,7 +37,7 @@ const services = [
   {
     id: 'minecraft',
     name: 'Minecraft',
-    address: 'localhost:9090',
+    address: 'localhost:25565',
     start: '',
     stop: '',
   },
