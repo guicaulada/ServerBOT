@@ -1,0 +1,27 @@
+{
+  "name": "serverbot",
+  "version": "0.0.1",
+  "description": "A Discord bot that starts, stops and show the status of any configured service",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd src && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sighmir/ServerBOT.git"
+  },
+  "keywords": [
+    "server",
+    "bot"
+  ],
+  "author": "Guilherme Caulada (Sighmir)",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Sighmir/ServerBOT/issues"
+  },
+  "homepage": "https://github.com/Sighmir/ServerBOT#readme",
+  "dependencies": {
+    "cross-spawn": "^6.0.5",
+    "eris": "^0.8.6"
+  }
+}
