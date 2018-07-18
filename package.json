@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Sighmir/ServerBOT#readme",
   "dependencies": {
     "cross-spawn": "^6.0.5",
-    "eris": "^0.8.6"
+    "eris": "^0.8.6",
+    "public-ip": "^2.4.0"
   }
 }

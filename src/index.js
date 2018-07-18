@@ -1,6 +1,11 @@
+const config = require('./config/config.js');
 __spawn = require('cross-spawn');
 __Eris = require('eris');
-const config = require('./config/config.js');
+
+require('public-ip').v4().then((ip) => {
+  __ip = ip;
+});
+
 
 if (!config.bot.token) {
   console.log('Environment variable SERVERBOT_TOKEN is undefined!');
