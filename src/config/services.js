@@ -1,5 +1,5 @@
 const services = [{
-    id: 'exile',
+    id: 'altis',
     name: 'Arma 3 Exile',
     port: 24666,
     start: '',
@@ -21,6 +21,7 @@ const services = [{
   },
   {
     id: '7d2d',
+    match: '7daystodie',
     name: '7 Days 2 Die',
     port: 26910,
     start: '',
@@ -35,6 +36,7 @@ const services = [{
   },
   {
     id: 'minecraft',
+    match: 'java',
     name: 'Minecraft',
     port: 25565,
     start: '',
