@@ -64,7 +64,7 @@ __ServerBOT.servicePoller = () => {
               psOut = psOut.split(/ +/g).filter((e) => {
                 return e.length != 0;
               });
-              psOut = psOut[psOut.length - 1];
+              psOut = psOut.slice(2, psOut.length).join(' ');
             }
             services[port].command = psOut;
             if (psOut.search(services[port].id.toLowerCase())) {
