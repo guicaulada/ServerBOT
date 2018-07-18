@@ -58,7 +58,6 @@ __ServerBOT.servicePoller = () => {
               services[port].command = psOut;
               if (psOut.search(services[port].id.toLowerCase())) {
                 services[port].status = true;
-                console.log(psOut);
               }
               next();
             });
