@@ -10,21 +10,15 @@ __ServerBOT.servicePoller = () => {
   let isWin = process.platform === 'win32';
   let services = __ServerBOT.serviceByPort();
   let poller = () => {
-    let ready = false;
     let success = {};
 
     let nextPoller = () => {
-      if (!ready) {
-        ready = true;
-      } else {
-        ready = false;
-        for (port in services) {
-          if (!success[port]) {
-            services[port].status = false;
-          }
+      for (port in services) {
+        if (!success[port]) {
+          services[port].status = false;
         }
-        __ServerBOT.servicePoller = setTimeout(poller, __ServerBOT.config.updateInterval);
       }
+      __ServerBOT.servicePoller = setTimeout(poller, __ServerBOT.config.updateInterval);
     };
 
     let nextLine = (lines, i, max) => {
@@ -68,13 +62,14 @@ __ServerBOT.servicePoller = () => {
       }
     };
 
+    let nsOut = '';
     let ns = __spawn('netstat', ['-noa']);
     ns.stdout.on('data', (data) => {
-      let lines = data.toString('utf8').toLowerCase().split('\r\n');
-      nextLine(lines, 0, lines.length);
+      nsOut = nsOut + data.toString('utf8').toLowerCase();
     });
     ns.on('close', (data) => {
-      nextPoller();
+      let lines = nsOut.split('\r\n');
+      nextLine(lines, 0, lines.length);
     });
   };
   poller();
