@@ -26,6 +26,44 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
   if (args.length > 0) {
     __ServerBOT.deleteMessage(msg.channel.id, msg.id, 'Executing command...');
     let service = __ServerBOT.serviceById()[args[0]];
+    let color = 0xFFFF00;
+    let status = 'UNKNOWN';
+    if (service.status === true) {
+      status = 'UP';
+      color = 0x00FF00;
+    } else if (service.status === false) {
+      status = 'DOWN';
+      color = 0xFF0000;
+    }
+
+    let fields = [
+      {
+        name: 'PID',
+        value: service.pid ? service.pid : '-',
+        inline: true,
+      },
+      {
+        name: 'PORT',
+        value: service.port,
+        inline: true,
+      },
+      {
+        name: 'STATUS',
+        value: status,
+        inline: true,
+      },
+      {
+        name: 'COMMAND',
+        value: service.command.replace(/ +/g, '') ? service.command : '-',
+        inline: false,
+      },
+      {
+        name: 'ARGUMENTS',
+        value: service.arguments.replace(/ +/g, '') ? service.arguments : '-',
+        inline: false,
+      },
+    ];
+
     __ServerBOT.createMessage(msg.channel.id, {
       embed: {
         title: service.name,
@@ -34,29 +72,8 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
           name: msg.author.username,
           icon_url: msg.author.avatarURL,
         },
-        color: service.status ? 0x00FF00 : 0xFF0000,
-        fields: [
-          {
-            name: 'ID',
-            value: service.id,
-            inline: true,
-          },
-          {
-            name: 'PORT',
-            value: service.port,
-            inline: true,
-          },
-          {
-            name: 'STATUS',
-            value: service.status ? 'UP' : 'DOWN',
-            inline: true,
-          },
-          {
-            name: 'COMMAND',
-            value: service.command ? service.command : '-',
-            inline: false,
-          },
-        ],
+        color: color,
+        fields: fields,
         footer: { // Footer text
           text: __ip + ':' + service.port,
         },

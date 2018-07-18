@@ -47,7 +47,7 @@ __ServerBOT.servicePoller = () => {
           let args = ['-p', pid, '-o', 'command='];
           if (isWin) {
             cmd = 'powershell';
-            args = ['-Command', `Get-Process -Id ${pid} -FileVersionInfo`];
+            args = ['-Command', `Get-CimInstance Win32_Process -Filter "processid = ${pid}" | Select-Object CommandLine`];
           }
           let psOut = '';
           let ps = __spawn(cmd, args);
@@ -60,14 +60,18 @@ __ServerBOT.servicePoller = () => {
                 return e.length != 0;
               });
               psOut = psOut[psOut.length - 1];
-
-              psOut = psOut.split(/ +/g).filter((e) => {
-                return e.length != 0;
-              });
-              psOut = psOut.slice(2, psOut.length).join(' ');
             }
-            services[port].command = psOut;
-            if (psOut.search(services[port].id.toLowerCase())) {
+            let args = psOut.search(' -');
+            if (args < 0) args = psOut.search(' "-');
+            let psArgs = psOut.slice(args, psOut.length);
+            let psCmd = psOut.slice(0, args);
+            services[port].pid = pid;
+            services[port].command = psCmd;
+            services[port].arguments = psArgs;
+            let id = services[port].id.toLowerCase();
+            let match = services[port].match;
+            if (match) match = match.toLowerCase();
+            if (psOut.includes(id) || psOut.includes(match)) {
               services[port].status = true;
             }
             nextLine(lines, i + 1, max);
