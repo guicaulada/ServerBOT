@@ -55,7 +55,17 @@ __ServerBOT.servicePoller = () => {
             psOut = psOut + data.toString('utf8').toLowerCase();
           });
           ps.on('close', (data) => {
-            if (isWin) psOut = psOut.replace(/ +/g, '').split('\r\n')[3];
+            if (isWin) {
+              psOut = psOut.split('\r\n').filter((e) => {
+                return e.length != 0;
+              });
+              psOut = psOut[psOut.length - 1];
+
+              psOut = psOut.split(/ +/g).filter((e) => {
+                return e.length != 0;
+              });
+              psOut = psOut[psOut.length - 1];
+            }
             services[port].command = psOut;
             if (psOut.search(services[port].id.toLowerCase())) {
               services[port].status = true;
