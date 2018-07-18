@@ -6,6 +6,14 @@ __ServerBOT.serviceByPort = () => {
   return result;
 };
 
+__ServerBOT.serviceById = () => {
+  let result = {};
+  for (service of __ServerBOT.config.services) {
+    result[service.id] = service;
+  }
+  return result;
+};
+
 __ServerBOT.servicePoller = () => {
   let isWin = process.platform === 'win32';
   let services = __ServerBOT.serviceByPort();
