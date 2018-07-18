@@ -9,7 +9,11 @@ let serviceCommand = __ServerBOT.registerCommand('service', (msg, args) => {
 serviceCommand.registerSubcommand('list', (msg, args) => {
   let text = '';
   for (let service of __ServerBOT.config.services) {
-    text = text + `${service.status ? ':white_check_mark:' : ':x:'} ${service.name} (${service.id})\n`;
+    if (service.status === undefined) {
+      text = text + `:question: ${service.name} (${service.id})\n`;
+    } else {
+      text = text + `${service.status ? ':white_check_mark:' : ':x:'} ${service.name} (${service.id})\n`;
+    }
   }
   return text;
 }, {
