@@ -60,7 +60,11 @@ __ServerBOT.servicePoller = () => {
             }
             nextLine(lines, i + 1, max);
           });
+        } else {
+          nextLine(lines, i + 1, max);
         }
+      } else {
+        nextLine(lines, i + 1, max);
       }
     };
 
