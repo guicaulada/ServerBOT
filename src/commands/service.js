@@ -7,6 +7,8 @@ let serviceCommand = __ServerBOT.registerCommand('service', (msg, args) => {
 });
 
 serviceCommand.registerSubcommand('list', (msg, args) => {
+  __ServerBOT.deleteMessage(msg.channel.id, msg.id, 'Executing command...');
+
   let text = '';
   for (let service of __ServerBOT.config.services) {
     if (service.status === undefined) {
@@ -15,7 +17,26 @@ serviceCommand.registerSubcommand('list', (msg, args) => {
       text = text + `${service.status ? ':white_check_mark:' : ':x:'} ${service.name} (${service.id})\n`;
     }
   }
-  return text;
+
+  let address = __ServerBOT.config.ip;
+  if (__ServerBOT.config.dns) {
+    address = __ServerBOT.config.dns;
+  }
+
+  __ServerBOT.createMessage(msg.channel.id, {
+    embed: {
+      title: 'Service List',
+      description: text,
+      author: {
+        name: msg.author.username,
+        icon_url: msg.author.avatarURL,
+      },
+      color: 0x0066cc,
+      footer: { // Footer text
+        text: address,
+      },
+    },
+  });
 }, {
   description: 'Lists registered services',
   fullDescription: 'The bot will list the registered services followed by their ID.',
@@ -28,6 +49,8 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
     let service = __ServerBOT.serviceById()[args[0]];
     let color = 0xFFFF00;
     let status = 'UNKNOWN';
+    let address = __ServerBOT.config.ip + ':' + service.port;
+
     if (service.status === true) {
       status = 'UP';
       color = 0x00FF00;
@@ -64,6 +87,10 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
       },
     ];
 
+    if (__ServerBOT.config.dns) {
+      address = __ServerBOT.config.dns + ':' + service.port;
+    }
+
     __ServerBOT.createMessage(msg.channel.id, {
       embed: {
         title: service.name,
@@ -75,7 +102,7 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
         color: color,
         fields: fields,
         footer: { // Footer text
-          text: __ip + ':' + service.port,
+          text: address,
         },
       },
     });
