@@ -63,6 +63,7 @@ __ServerBOT.servicePoller = () => {
             }
             let args = psOut.search(' -');
             if (args < 0) args = psOut.search(' "-');
+            if (args < 0) args = psOut.search('" ')+1;
             let psArgs = psOut.slice(args, psOut.length);
             let psCmd = psOut.slice(0, args);
             services[port].pid = pid;
