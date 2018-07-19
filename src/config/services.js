@@ -2,7 +2,7 @@ const services = [
   {
     id: 'island',
     name: 'Ark - The Island',
-    port: 22322,
+    port: 22323,
     start: '',
     stop: '',
   },
