@@ -2,7 +2,7 @@ let serviceCommand = __ServerBOT.registerCommand('service', (msg, args) => {
   return `**!help** ${msg.command.label}`;
 }, {
   description: 'Manages registered services',
-  fullDescription: 'Use service list, start, stop and restart to manage services',
+  fullDescription: 'Use service list, start, stop and restart to manage services.',
   usage: '<subcommand> <service>',
 });
 
@@ -92,40 +92,21 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
         address = __ServerBOT.config.dns + ':' + service.port;
       }
 
-      if (args.length == 1) {
-        __ServerBOT.createMessage(msg.channel.id, {
-          embed: {
-            title: service.name,
-            description: service.description,
-            author: {
-              name: msg.author.username,
-              icon_url: msg.author.avatarURL,
-            },
-            color: color,
-            fields: fields,
-            footer: { // Footer text
-              text: address,
-            },
+      __ServerBOT.createMessage(msg.channel.id, {
+        embed: {
+          title: service.name,
+          description: service.description,
+          author: {
+            name: msg.author.username,
+            icon_url: msg.author.avatarURL,
           },
-        });
-      } else if (service[args[1]] || args[1] == 'status') {
-        __ServerBOT.createMessage(msg.channel.id, {
-          embed: {
-            title: service.name,
-            description: service[args[1]],
-            author: {
-              name: msg.author.username,
-              icon_url: msg.author.avatarURL,
-            },
-            color: 0xff9900,
-            footer: { // Footer text
-              text: address,
-            },
+          color: color,
+          fields: fields,
+          footer: { // Footer text
+            text: address,
           },
-        });
-      } else {
-        return `Couldn't find a field named ${args[1]}`;
-      }
+        },
+      });
     } else {
       return `Couldn't find a service named ${args[0]}`;
     }
@@ -133,9 +114,9 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
     return `**!help** ${msg.command.parentCommand.label} ${msg.command.label}`;
   }
 }, {
-  description: 'Lists registered services',
-  fullDescription: 'The bot will list the registered services followed by their ID.',
-  usage: '<service> <field>',
+  description: 'Gives information about a service',
+  fullDescription: 'The bot will list the service\'s PID, PORT, STATUS, COMMAND and ARGUMENTS.',
+  usage: '<service>',
 });
 
 __ServerBOT.registerCommandAlias('server', 'service'); // Alias !server to !service
