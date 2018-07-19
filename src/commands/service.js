@@ -47,65 +47,69 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
   if (args.length > 0) {
     __ServerBOT.deleteMessage(msg.channel.id, msg.id, 'Executing command...');
     let service = __ServerBOT.serviceById()[args[0]];
-    let color = 0xFFFF00;
-    let status = 'UNKNOWN';
-    let address = __ServerBOT.config.ip + ':' + service.port;
+    if (service) {
+      let color = 0xFFFF00;
+      let status = 'UNKNOWN';
+      let address = __ServerBOT.config.ip + ':' + service.port;
 
-    if (service.status === true) {
-      status = 'UP';
-      color = 0x00FF00;
-    } else if (service.status === false) {
-      status = 'DOWN';
-      color = 0xFF0000;
-    }
+      if (service.status === true) {
+        status = 'UP';
+        color = 0x00FF00;
+      } else if (service.status === false) {
+        status = 'DOWN';
+        color = 0xFF0000;
+      }
 
-    let fields = [
-      {
-        name: 'PID',
-        value: service.pid ? service.pid : '-',
-        inline: true,
-      },
-      {
-        name: 'PORT',
-        value: service.port,
-        inline: true,
-      },
-      {
-        name: 'STATUS',
-        value: status,
-        inline: true,
-      },
-      {
-        name: 'COMMAND',
-        value: service.command.replace(/ +/g, '') ? service.command : '-',
-        inline: false,
-      },
-      {
-        name: 'ARGUMENTS',
-        value: service.arguments.replace(/ +/g, '') ? service.arguments : '-',
-        inline: false,
-      },
-    ];
-
-    if (__ServerBOT.config.dns) {
-      address = __ServerBOT.config.dns + ':' + service.port;
-    }
-
-    __ServerBOT.createMessage(msg.channel.id, {
-      embed: {
-        title: service.name,
-        description: service.description,
-        author: {
-          name: msg.author.username,
-          icon_url: msg.author.avatarURL,
+      let fields = [
+        {
+          name: 'PID',
+          value: service.pid ? service.pid : '-',
+          inline: true,
         },
-        color: color,
-        fields: fields,
-        footer: { // Footer text
-          text: address,
+        {
+          name: 'PORT',
+          value: service.port,
+          inline: true,
         },
-      },
-    });
+        {
+          name: 'STATUS',
+          value: status,
+          inline: true,
+        },
+        {
+          name: 'COMMAND',
+          value: service.command.replace(/ +/g, '') ? service.command : '-',
+          inline: false,
+        },
+        {
+          name: 'ARGUMENTS',
+          value: service.arguments.replace(/ +/g, '') ? service.arguments : '-',
+          inline: false,
+        },
+      ];
+
+      if (__ServerBOT.config.dns) {
+        address = __ServerBOT.config.dns + ':' + service.port;
+      }
+
+      __ServerBOT.createMessage(msg.channel.id, {
+        embed: {
+          title: service.name,
+          description: service.description,
+          author: {
+            name: msg.author.username,
+            icon_url: msg.author.avatarURL,
+          },
+          color: color,
+          fields: fields,
+          footer: { // Footer text
+            text: address,
+          },
+        },
+      });
+    } else {
+      return `Couldn't find a service named ${args[0]}`;
+    }
   } else {
     return `**!help** ${msg.command.parentCommand.label} ${msg.command.label}`;
   }
