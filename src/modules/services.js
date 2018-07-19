@@ -50,7 +50,7 @@ __ServerBOT.servicePoller = () => {
           let args = ['-p', pid, '-o', 'command='];
           if (isWin) {
             cmd = 'powershell';
-            args = ['-Command', `Get-CimInstance Win32_Process -Filter "processid = ${pid}" | Select-Object CommandLine`];
+            args = ['-Command', `Get-CimInstance Win32_Process -Filter "processid = ${pid}" | Select-Object CommandLine | format-list`];
           }
           let psOut = '';
           let ps = __spawn(cmd, args);
@@ -62,16 +62,20 @@ __ServerBOT.servicePoller = () => {
               psOut = psOut.split('\r\n').filter((e) => {
                 return e.length != 0;
               });
-              psOut = psOut[psOut.length - 1];
+              psOut = psOut.map((e) => {
+                return e.trim();
+              }).join(' ').replace('commandline : ', '');
             }
-            let args = psOut.search(' -');
+            let args = psOut.search('.exe');
+            if (args > 0) args += 5;
             if (args < 0) args = psOut.search(' "-');
+            if (args < 0) args = psOut.search(' -');
             if (args < 0) args = psOut.search('" ')+1;
             let psArgs = psOut.slice(args, psOut.length);
             let psCmd = psOut.slice(0, args);
-            services[port].pid = pid;
-            services[port].command = psCmd;
-            services[port].arguments = psArgs;
+            services[port].pid = pid || '-';
+            services[port].command = psCmd || '-';
+            services[port].arguments = psArgs || '-';
             let id = services[port].id.toLowerCase();
             let match = services[port].match;
             if (match) match = match.toLowerCase();
