@@ -92,21 +92,40 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
         address = __ServerBOT.config.dns + ':' + service.port;
       }
 
-      __ServerBOT.createMessage(msg.channel.id, {
-        embed: {
-          title: service.name,
-          description: service.description,
-          author: {
-            name: msg.author.username,
-            icon_url: msg.author.avatarURL,
+      if (args.length == 1) {
+        __ServerBOT.createMessage(msg.channel.id, {
+          embed: {
+            title: service.name,
+            description: service.description,
+            author: {
+              name: msg.author.username,
+              icon_url: msg.author.avatarURL,
+            },
+            color: color,
+            fields: fields,
+            footer: { // Footer text
+              text: address,
+            },
           },
-          color: color,
-          fields: fields,
-          footer: { // Footer text
-            text: address,
+        });
+      } else if (service[args[1]] || args[1] == 'status') {
+        __ServerBOT.createMessage(msg.channel.id, {
+          embed: {
+            title: service.name,
+            description: service[args[1]],
+            author: {
+              name: msg.author.username,
+              icon_url: msg.author.avatarURL,
+            },
+            color: 0xff9900,
+            footer: { // Footer text
+              text: address,
+            },
           },
-        },
-      });
+        });
+      } else {
+        return `Couldn't find a field named ${args[1]}`;
+      }
     } else {
       return `Couldn't find a service named ${args[0]}`;
     }
@@ -116,7 +135,7 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
 }, {
   description: 'Lists registered services',
   fullDescription: 'The bot will list the registered services followed by their ID.',
-  usage: '<service>',
+  usage: '<service> <field>',
 });
 
 __ServerBOT.registerCommandAlias('server', 'service'); // Alias !server to !service
