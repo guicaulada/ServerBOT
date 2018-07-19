@@ -2,11 +2,6 @@ const config = require('./config/config.js');
 __spawn = require('cross-spawn');
 __Eris = require('eris');
 
-require('public-ip').v4().then((ip) => {
-  __ip = ip;
-});
-
-
 if (!config.bot.token) {
   console.log('Environment variable SERVERBOT_TOKEN is undefined!');
   process.exit();
@@ -28,5 +23,9 @@ __ServerBOT.on('ready', () => { // When the bot is ready
 require('./commands/index.js');
 require('./messages/index.js');
 require('./modules/index.js');
+
+require('public-ip').v4().then((ip) => {
+  __ServerBOT.config.ip = ip;
+});
 
 __ServerBOT.connect(); // Get the bot to connect to Discord
