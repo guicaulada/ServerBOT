@@ -24,6 +24,9 @@ __ServerBOT.servicePoller = () => {
       for (port in services) {
         if (!success[port]) {
           services[port].status = false;
+          if (!services[port].pid) services[port].pid = '-';
+          if (!services[port].command) services[port].command = '-';
+          if (!services[port].arguments) services[port].arguments = '-';
         }
       }
       __ServerBOT.servicePoller = setTimeout(poller, __ServerBOT.config.updateInterval);

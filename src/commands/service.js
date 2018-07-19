@@ -63,7 +63,7 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
       let fields = [
         {
           name: 'PID',
-          value: service.pid ? service.pid : '-',
+          value: service.pid,
           inline: true,
         },
         {
@@ -78,12 +78,12 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
         },
         {
           name: 'COMMAND',
-          value: service.command.replace(/ +/g, '') ? service.command : '-',
+          value: service.command,
           inline: false,
         },
         {
           name: 'ARGUMENTS',
-          value: service.arguments.replace(/ +/g, '') ? service.arguments : '-',
+          value: service.arguments,
           inline: false,
         },
       ];
