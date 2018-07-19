@@ -1,4 +1,12 @@
-const services = [{
+const services = [
+  {
+    id: 'island',
+    name: 'Ark - The Island',
+    port: 22322,
+    start: '',
+    stop: '',
+  },
+  {
     id: 'altis',
     name: 'Arma 3 Exile',
     port: 24666,
