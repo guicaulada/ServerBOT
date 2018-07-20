@@ -4,6 +4,7 @@ let serviceCommand = __ServerBOT.registerCommand('service', (msg, args) => {
   description: 'Manages registered services',
   fullDescription: 'Use service list, start, stop and restart to manage services.',
   usage: '<subcommand> <service>',
+  requirements: {roleIDs: __ServerBOT.config.adminRoles},
 });
 
 serviceCommand.registerSubcommand('list', (msg, args) => {
@@ -108,7 +109,7 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
         },
       });
     } else {
-      return `Couldn't find a service named ${args[0]}`;
+      return `Couldn't find a service named **${args[0]}**`;
     }
   } else {
     return `**!help** ${msg.command.parentCommand.label} ${msg.command.label}`;
@@ -116,6 +117,47 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
 }, {
   description: 'Gives information about a service',
   fullDescription: 'The bot will list the service\'s PID, PORT, STATUS, COMMAND and ARGUMENTS.',
+  usage: '<service>',
+});
+
+serviceCommand.registerSubcommand('start', (msg, args) => {
+  if (args.length > 0) {
+    __ServerBOT.deleteMessage(msg.channel.id, msg.id, 'Executing command...');
+    let service = __ServerBOT.serviceById()[args[0]];
+    if (service) {
+      if (service.status) {
+        return `The service **${args[0]}** is already started`;
+      } else {
+        let cmd = 'bash';
+        let cmdArgs = [service.start];
+        if (__ServerBOT.isWin) {
+          cmd = 'powershell';
+        }
+        let path = service.start.split('\\');
+        path = path.slice(0, path.length-1).join('\\');
+        let start = __spawn(cmd, cmdArgs, {cwd: path});
+        let err = '';
+        start.stderr.on('data', (data) => {
+          err = err + data.toString('utf8').toLowerCase();
+        });
+        start.on('close', (data) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('success');
+          }
+        });
+        return `The service **${args[0]}** is being started`;
+      }
+    } else {
+      return `Couldn't find a service named **${args[0]}**`;
+    }
+  } else {
+    return `**!help** ${msg.command.parentCommand.label} ${msg.command.label}`;
+  }
+}, {
+  description: 'Starts a service',
+  fullDescription: 'The bot will start the specified service.',
   usage: '<service>',
 });
 
