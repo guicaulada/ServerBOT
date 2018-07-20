@@ -14,6 +14,32 @@ __ServerBOT.serviceById = () => {
   return result;
 };
 
+__ServerBOT.startService = (service, noMsg) => {
+  let cmd = 'bash';
+  let cmdArgs = [service.start];
+  if (__ServerBOT.isWin) {
+    cmd = 'powershell';
+  }
+  let path = service.start.split('\\');
+  path = path.slice(0, path.length - 1).join('\\');
+  let start = __spawn(cmd, cmdArgs, {cwd: path});
+  service.status = true;
+  service.pid = start.pid;
+};
+
+__ServerBOT.stopService = (service) => {
+  let cmd = 'kill';
+  let cmdArgs = ['-15', service.pid];
+  if (__ServerBOT.isWin) {
+    cmd = 'powershell';
+    cmdArgs = ['-Command', `Stop-Process -Id ${service.pid} -Force`];
+  }
+  let stop = __spawn(cmd, cmdArgs);
+  stop.on('exit', (data) => {
+    service.status = false;
+  });
+};
+
 __ServerBOT.servicePoller = () => {
   let services = __ServerBOT.serviceByPort();
   let poller = () => {
@@ -26,6 +52,11 @@ __ServerBOT.servicePoller = () => {
           if (!services[port].pid) services[port].pid = '-';
           if (!services[port].command) services[port].command = '-';
           if (!services[port].arguments) services[port].arguments = '-';
+
+          if (services[port].keepAlive) {
+            __ServerBOT.startService(services[port]);
+            __ServerBOT.createMessage(__ServerBOT.config.channel, `The service **${services[port].id}** has been restarted automatically`);
+          }
         }
       }
       __ServerBOT.servicePoller = setTimeout(poller, __ServerBOT.config.updateInterval);
