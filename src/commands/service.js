@@ -128,25 +128,7 @@ serviceCommand.registerSubcommand('start', (msg, args) => {
       if (service.status) {
         return `The service **${args[0]}** is already started`;
       } else {
-        let cmd = 'bash';
-        let cmdArgs = [service.start];
-        if (__ServerBOT.isWin) {
-          cmd = 'powershell';
-        }
-        let path = service.start.split('\\');
-        path = path.slice(0, path.length-1).join('\\');
-        let start = __spawn(cmd, cmdArgs, {cwd: path});
-        let err = '';
-        start.stderr.on('data', (data) => {
-          err = err + data.toString('utf8').toLowerCase();
-        });
-        start.on('close', (data) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('success');
-          }
-        });
+        __ServerBOT.startService(service);
         return `The service **${args[0]}** is being started`;
       }
     } else {
@@ -158,6 +140,56 @@ serviceCommand.registerSubcommand('start', (msg, args) => {
 }, {
   description: 'Starts a service',
   fullDescription: 'The bot will start the specified service.',
+  usage: '<service>',
+});
+
+serviceCommand.registerSubcommand('stop', (msg, args) => {
+  if (args.length > 0) {
+    __ServerBOT.deleteMessage(msg.channel.id, msg.id, 'Executing command...');
+    let service = __ServerBOT.serviceById()[args[0]];
+    if (service) {
+      if (!service.status) {
+        return `The service **${args[0]}** is already stopped`;
+      } else {
+        __ServerBOT.stopService(service);
+        return `The service **${args[0]}** is being stopped`;
+      }
+    } else {
+      return `Couldn't find a service named **${args[0]}**`;
+    }
+  } else {
+    return `**!help** ${msg.command.parentCommand.label} ${msg.command.label}`;
+  }
+}, {
+  description: 'Stops a service',
+  fullDescription: 'The bot will stop the specified service.',
+  usage: '<service>',
+});
+
+serviceCommand.registerSubcommand('restart', (msg, args) => {
+  if (args.length > 0) {
+    __ServerBOT.deleteMessage(msg.channel.id, msg.id, 'Executing command...');
+    let service = __ServerBOT.serviceById()[args[0]];
+    if (service) {
+      if (service.status) {
+        __ServerBOT.stopService(service, true);
+        setTimeout(() => {
+          __ServerBOT.startService(service);
+        }, 1000);
+        return `The service **${args[0]}** is being restarted`;
+      } else {
+        __ServerBOT.startService(service);
+        return `The service **${args[0]}** is being started`;
+      }
+    } else {
+      return `Couldn't find a service named **${args[0]}**`;
+    }
+  } else {
+    return `**!help** ${msg.command.parentCommand.label} ${msg.command.label}`;
+  }
+}, {
+  description: 'Restarts a service',
+  fullDescription: 'The bot will restart the specified service.',
   usage: '<service>',
 });
 
