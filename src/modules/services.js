@@ -15,7 +15,6 @@ __ServerBOT.serviceById = () => {
 };
 
 __ServerBOT.servicePoller = () => {
-  let isWin = process.platform === 'win32';
   let services = __ServerBOT.serviceByPort();
   let poller = () => {
     let success = {};
@@ -36,11 +35,11 @@ __ServerBOT.servicePoller = () => {
       if (i == max) return nextPoller();
       let line = lines[i];
       let lnArr = line.split(/ +/g);
-      let out = lnArr.slice(Number(isWin), lnArr.length);
+      let out = lnArr.slice(Number(__ServerBOT.isWin), lnArr.length);
       if (out[0] && (out[0] == 'udp' || out[0] == 'tcp')) {
         let pid = out[out.length - 1];
         let addr = out[3].split(':');
-        if (isWin) {
+        if (__ServerBOT.isWin) {
           addr = out[1].split(':');
         }
         let port = addr[addr.length - 1];
@@ -48,7 +47,7 @@ __ServerBOT.servicePoller = () => {
           success[port] = true;
           let cmd = 'ps';
           let args = ['-p', pid, '-o', 'command='];
-          if (isWin) {
+          if (__ServerBOT.isWin) {
             cmd = 'powershell';
             args = ['-Command', `Get-CimInstance Win32_Process -Filter "processid = ${pid}" | Select-Object CommandLine | format-list`];
           }
@@ -58,7 +57,7 @@ __ServerBOT.servicePoller = () => {
             psOut = psOut + data.toString('utf8').toLowerCase();
           });
           ps.on('close', (data) => {
-            if (isWin) {
+            if (__ServerBOT.isWin) {
               psOut = psOut.split('\r\n').filter((e) => {
                 return e.length != 0;
               });

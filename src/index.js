@@ -15,6 +15,7 @@ __ServerBOT = new __Eris.CommandClient(config.bot.token, {}, {
 });
 
 __ServerBOT.config = config;
+__ServerBOT.isWin = process.platform === 'win32';
 
 __ServerBOT.on('ready', () => { // When the bot is ready
   console.log('Ready!'); // Log 'Ready!'
