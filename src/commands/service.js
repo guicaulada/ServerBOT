@@ -4,7 +4,6 @@ let serviceCommand = __ServerBOT.registerCommand('service', (msg, args) => {
   description: 'Manages registered services',
   fullDescription: 'Use service list, start, stop and restart to manage services.',
   usage: '<subcommand> <service>',
-  requirements: {roleIDs: __ServerBOT.config.adminRoles},
 });
 
 serviceCommand.registerSubcommand('list', (msg, args) => {
@@ -118,6 +117,7 @@ serviceCommand.registerSubcommand('info', (msg, args) => {
   description: 'Gives information about a service',
   fullDescription: 'The bot will list the service\'s PID, PORT, STATUS, COMMAND and ARGUMENTS.',
   usage: '<service>',
+  requirements: {roleIDs: __ServerBOT.config.adminRoles},
 });
 
 serviceCommand.registerSubcommand('start', (msg, args) => {
@@ -141,6 +141,7 @@ serviceCommand.registerSubcommand('start', (msg, args) => {
   description: 'Starts a service',
   fullDescription: 'The bot will start the specified service.',
   usage: '<service>',
+  requirements: {roleIDs: __ServerBOT.config.adminRoles},
 });
 
 serviceCommand.registerSubcommand('stop', (msg, args) => {
@@ -164,6 +165,7 @@ serviceCommand.registerSubcommand('stop', (msg, args) => {
   description: 'Stops a service',
   fullDescription: 'The bot will stop the specified service.',
   usage: '<service>',
+  requirements: {roleIDs: __ServerBOT.config.adminRoles},
 });
 
 serviceCommand.registerSubcommand('restart', (msg, args) => {
@@ -191,6 +193,7 @@ serviceCommand.registerSubcommand('restart', (msg, args) => {
   description: 'Restarts a service',
   fullDescription: 'The bot will restart the specified service.',
   usage: '<service>',
+  requirements: {roleIDs: __ServerBOT.config.adminRoles},
 });
 
 __ServerBOT.registerCommandAlias('server', 'service'); // Alias !server to !service
