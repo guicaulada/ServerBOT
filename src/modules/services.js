@@ -14,7 +14,7 @@ __ServerBOT.serviceById = () => {
   return result;
 };
 
-__ServerBOT.startService = (service, noMsg) => {
+__ServerBOT.startService = (service) => {
   let cmd = 'bash';
   let cmdArgs = [service.start];
   if (__ServerBOT.isWin) {
@@ -55,7 +55,9 @@ __ServerBOT.servicePoller = () => {
 
           if (services[port].keepAlive) {
             __ServerBOT.startService(services[port]);
-            __ServerBOT.createMessage(__ServerBOT.config.channel, `The service **${services[port].id}** has been restarted automatically`);
+            if (!services[port].notify === false) {
+              __ServerBOT.createMessage(__ServerBOT.config.channel, `The service **${services[port].id}** has been restarted automatically`);
+            }
           }
         }
       }
