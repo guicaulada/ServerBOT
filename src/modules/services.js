@@ -55,7 +55,7 @@ __ServerBOT.servicePoller = () => {
 
           if (services[port].keepAlive) {
             __ServerBOT.startService(services[port]);
-            if (!services[port].notify === false) {
+            if (!(services[port].notify === false)) {
               __ServerBOT.createMessage(__ServerBOT.config.channel, `The service **${services[port].id}** has been restarted automatically`);
             }
           }
